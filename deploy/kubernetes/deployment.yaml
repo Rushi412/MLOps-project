@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: churnguard
+  labels:
+    app: churnguard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: churnguard
+  template:
+    metadata:
+      labels:
+        app: churnguard
+    spec:
+      containers:
+        - name: api
+          image: churnguard:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {cpu: 500m, memory: 512Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: churnguard
+spec:
+  selector:
+    app: churnguard
+  ports:
+    - port: 80
+      targetPort: 8000
