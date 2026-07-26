@@ -37,7 +37,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
 python -m churn_service.training
-uvicorn churn_service.app:app --reload --port 8000
+uvicorn churn_service.app:app --reload --reload-dir src --port 8000
 ```
 
 Visit `http://127.0.0.1:8000/docs` to test the churn API. To run another example:
