@@ -32,7 +32,9 @@ services:
       mc mb --ignore-existing local/mlflow"
 
   mlflow:
-    image: ghcr.io/mlflow/mlflow:v2.16.2
+    build:
+      context: ./docker/mlflow
+    image: mlops-learning-platform-mlflow:local
     depends_on: [postgres, minio, create-bucket]
     environment:
       MLFLOW_S3_ENDPOINT_URL: http://minio:9000
