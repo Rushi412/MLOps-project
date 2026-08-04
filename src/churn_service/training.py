@@ -1,9 +1,11 @@
 """Train a reproducible baseline model and log the experiment to MLflow."""
 
+import os
 from pathlib import Path
 
 import joblib
 import mlflow
+import mlflow.sklearn
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -56,10 +58,15 @@ def train() -> dict[str, float]:
     metrics = {"accuracy": accuracy_score(y_test, probabilities >= 0.5), "roc_auc": roc_auc_score(y_test, probabilities)}
     ARTIFACT_PATH.parent.mkdir(exist_ok=True)
     joblib.dump(pipeline, ARTIFACT_PATH)
-    with mlflow.start_run():
+    with mlflow.start_run() as run:
         mlflow.log_params({"algorithm": "logistic_regression", "random_state": RANDOM_STATE, "train_rows": len(x_train)})
         mlflow.log_metrics(metrics)
-        mlflow.log_artifact(str(ARTIFACT_PATH))
+        mlflow.sklearn.log_model(pipeline, artifact_path="model")
+        mlflow.log_artifact(str(ARTIFACT_PATH), artifact_path="portable-artifact")
+        if os.getenv("MLFLOW_REGISTER_MODEL", "false").lower() == "true":
+            from churn_service.registry import register_candidate
+
+            register_candidate(run.info.run_id)
     return metrics
 
 

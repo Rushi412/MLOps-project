@@ -18,6 +18,8 @@ GitHub Actions -> Docker -> FastAPI serving -> Kubernetes (kind)
 
 The components are deliberately layered. Start with the core workflow, then add the optional local platform services. See [platform architecture](docs/platform-architecture.md) and the [learning path](docs/learning-path.md).
 
+For the shortest verified path, use the [five-minute quickstart](docs/quickstart.md).
+
 ## Example projects
 
 | Example | ML task | What you learn |
@@ -86,6 +88,15 @@ ruff check .
 pytest
 docker build -t churnguard:local .
 ```
+
+## Model promotion and drift evidence
+
+- The training workflow logs an MLflow model artifact and can register a `candidate` model version.
+- `python -m churn_service.registry --promote` moves the `champion` alias only after a visible ROC AUC gate passes.
+- `python -m churn_service.monitoring` produces a JSON feature-drift report with explicit thresholds.
+- `/metrics` exposes prediction counters and probability distribution metrics for Prometheus.
+
+See the [architecture and lifecycle guide](docs/platform-architecture.md) for commands, boundaries, and the complete diagram.
 
 ## Publish to GitHub
 
