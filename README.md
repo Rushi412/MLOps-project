@@ -79,7 +79,7 @@ kubectl apply -f deploy/kubernetes/deployment.yaml
 kubectl port-forward service/churnguard 8080:80
 ```
 
-The service is then available at `http://127.0.0.1:8080`. For a real registry, replace the local image with an immutable tag such as `ghcr.io/rushi412/mlops-learning-platform:1.0.0`.
+The service is then available at `http://127.0.0.1:8080`. For a real registry, replace the local image with an immutable tag such as `ghcr.io/rushi412/mlops-project:1.0.0`.
 
 ## Checks
 
@@ -97,16 +97,3 @@ docker build -t churnguard:local .
 - `/metrics` exposes prediction counters and probability distribution metrics for Prometheus.
 
 See the [architecture and lifecycle guide](docs/platform-architecture.md) for commands, boundaries, and the complete diagram.
-
-## Publish to GitHub
-
-This folder is already initialized as a separate local Git repository. Create an empty `mlops-learning-platform` repository under your `Rushi412` GitHub account, then from this directory run:
-
-```powershell
-git add .
-git commit -m "feat: initialize MLOps learning platform"
-git remote add origin https://github.com/Rushi412/mlops-learning-platform.git
-git push -u origin main
-```
-
-Set your future portfolio website in the GitHub repository's **About → Website** field and add its address to the `PORTFOLIO_URL` repository variable. The CI workflow checks that link after every change.
